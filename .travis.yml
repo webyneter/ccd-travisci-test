@@ -1,0 +1,43 @@
+# sudo: false
+
+# language: python
+
+# python:
+#   - 3.6
+
+# install:
+#   - pip install -r ./requirements/local.txt
+
+# script:
+#   - ls -lAh
+#   - set -a
+#   - . ./.envs/.local/.django
+#   - . ./.envs/.local/.postgres
+#   - set +a
+#   - export DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
+#   - pytest --cov=./
+
+# after_success:
+#   - codecov
+
+
+
+sudo: required
+
+services: 
+  - docker
+
+install:
+  - docker version
+  - docker-compose version
+
+before_script:
+  - docker-compose -f local.yml build
+
+script:
+  - mkdir -p ./app/
+  - docker-compose -f local.yml run --rm -v "$PWD/app/:." django pytest --cov=./
+  - ls ./app/
+
+after_success:
+  - codecov
