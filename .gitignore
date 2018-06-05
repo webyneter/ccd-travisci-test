@@ -325,3 +325,6 @@ test/media/
 .env
 .envs/*
 !.envs/.local/
+
+
+.pytest_cache/
